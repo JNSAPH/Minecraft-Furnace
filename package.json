@@ -1,0 +1,19 @@
+{
+  "name": "minecraft-furnace",
+  "module": "src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/gradient-string": "^1.1.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@clack/core": "^0.3.4",
+    "@clack/prompts": "^0.7.0",
+    "chalk": "5.2.0",
+    "commander": "^12.0.0",
+    "gradient-string": "^2.0.2"
+  }
+}
