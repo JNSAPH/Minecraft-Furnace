@@ -6,6 +6,7 @@ import { getServerJarsList } from "@/utils/serverJars";
 import { logger } from "@/utils/logger";
 import { v4 as uuidv4 } from 'uuid';
 import { acceptEULA, createFolder, downloadFile, modifyServerProperties, runServerJAR } from '@/utils/fs_utils';
+import { log } from 'console';
 
 const main = async () => {
     const javaStatus = await isJavaInstalled();
@@ -50,8 +51,6 @@ const main = async () => {
         jarURL = configuration.custom_jar_url;
     }
 
-    console.log(configuration);
-
     try {
         const uuid = uuidv4();
         const shortUUID = uuid.replace(/-/g, '').substring(0, 8);
@@ -59,17 +58,21 @@ const main = async () => {
 
         s.message("Creating Server Folder");
         await createFolder(`${serverName}`, process.cwd());
+        logger.info(`Server Folder Created: ${serverName}`);
 
         s.message("Downloading Server JAR");
         await downloadFile(jarURL as string, "server.jar", process.cwd() + `/${serverName}`);
+        logger.info("Server JAR Downloaded");
 
         s.message("Starting Server for the first time to generate eula & server.properties file")
         await runServerJAR(process.cwd() + `/${serverName}/server.jar`, process.cwd() + `/${serverName}`);
+        logger.info("Created initial server files. Stopping server...");
 
         s.message("Checking EULA Status");
         if (configuration.eula_accepted) {
-            s.message("Accepting EULA");
+            s.message("User accepted EULA in setup. Accepting EULA for the user.");
             await acceptEULA(process.cwd() + `/${serverName}`);
+            logger.info("EULA File Modified. EULA Accepted.");
         } else {
             logger.warn("During Setup, you did not accept the EULA. You will need to manually accept the EULA in the server folder to start the server.");
         }
@@ -80,6 +83,9 @@ const main = async () => {
             "server-port": configuration.server_properties.server_port,
             "max-players": configuration.server_properties.server_max_players
         });
+        logger.info("Modified server.properties file with user input.");
+
+        s.message("Creating start.sh file");
 
         s.stop("Finished!");
     } catch (error) {

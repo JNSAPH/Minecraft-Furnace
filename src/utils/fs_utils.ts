@@ -38,10 +38,6 @@ export async function runServerJAR(jarPath: string, serverFolder: string): Promi
             logger.debug(data.toString());
         });
 
-        child.stderr.on('data', (data: Buffer) => {
-            logger.error(data.toString());
-        });
-
         child.on('close', (code: number) => {
             if (code === 0) {
                 resolve();
@@ -51,6 +47,7 @@ export async function runServerJAR(jarPath: string, serverFolder: string): Promi
         });
 
         child.on('error', (error: Error) => {
+            logger.error("Error running server JAR");
             reject(error);
         });
     });
@@ -65,7 +62,7 @@ export async function acceptEULA(serverFolder: string): Promise<void> {
 export async function modifyServerProperties(serverFolder: string, properties: { [key: string]: string }): Promise<void> {
     // get content of file 
     const content = await fs.readFileSync(path.join(serverFolder, 'server.properties'), 'utf-8');
-    
+
     // replace only keys that are in the properties object
     const newContent = content.split('\n').map(line => {
         const [key, value] = line.split('=');
