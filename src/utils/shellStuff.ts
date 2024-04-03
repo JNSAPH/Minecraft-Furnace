@@ -1,23 +1,11 @@
 import { $ } from "bun";
 
-export const getJavaVersion = async () => {
+export const isJavaInstalled = async () => {
     try {
         const javaVersion = await $`java -version`;
-        
-        // return as string
-        return javaVersion.stdout.toString();
-    } catch (error) {
-        return null;
-    }
-}
 
-export const getDockerVersion = async () => {
-    try {
-        const dockerVersion = await $`docker -v`;
-        
-        // return as string
-        return dockerVersion.stdout.toString();
+        return true
     } catch (error) {
-        return null;
+        return false;
     }
 }

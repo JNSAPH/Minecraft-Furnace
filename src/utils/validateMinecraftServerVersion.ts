@@ -1,4 +1,4 @@
-import type { IServerJars } from "@/types/types"
+import type { IServerJars } from "@/types/IServerJars"
 
 export const validateMinecraftServerVersion = (value: string, server_platform: string | any, serverJars: IServerJars) => {
     
