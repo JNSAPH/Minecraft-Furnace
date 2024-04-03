@@ -1,22 +1,14 @@
-# minecraft-furnace
+<p align="center">
+  <picture>
+  <img src="./assets/logo_text.png" width="400" alt="Logo for Furnace">
+</picture>
+</p>
 
-To install dependencies:
+<h1 align="center">
+  create-furnace-server
+</h1>
 
-```bash
-bun install
-```
+Start a Minecraft Server in seconds with Furnace by running <code>TBD</code>
 
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.1.0. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
-
-# Todo
-- [ ] Implement Jar Information gatherer
-- [ ] Download Jar
-- [ ] Create Structure
-- [ ] Create Startup Script
-- [ ] Modify server.properties
+## Table of contents
+...
