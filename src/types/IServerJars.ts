@@ -1,5 +1,7 @@
 export interface IServerJars {
-    [serverType: string]: {
-        [version: string]: string;
-    };
+    [serverType: string]: SpecificJar;
+}
+
+export interface SpecificJar {
+    [version: string]: string;
 }

@@ -38,6 +38,10 @@ export async function runServerJAR(jarPath: string, serverFolder: string): Promi
             logger.debug(data.toString());
         });
 
+        child.stderr.on('data', (data: Buffer) => {
+            logger.error(data.toString());
+        });
+
         child.on('close', (code: number) => {
             if (code === 0) {
                 resolve();

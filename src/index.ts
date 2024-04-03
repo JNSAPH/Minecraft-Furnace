@@ -2,11 +2,10 @@ import { spinner } from '@clack/prompts';
 import { renderTitle } from "@/utils/renderTitle";
 import { runCli } from "@/cli/runCli";
 import { isJavaInstalled } from "@/utils/shellStuff";
-import { getServerJarsList } from "@/utils/serverJars";
+import { getServerJarsList } from "@/jars/serverJars";
 import { logger } from "@/utils/logger";
 import { v4 as uuidv4 } from 'uuid';
 import { acceptEULA, createFolder, downloadFile, modifyServerProperties, runServerJAR } from '@/utils/fs_utils';
-import { log } from 'console';
 
 const main = async () => {
     const javaStatus = await isJavaInstalled();
@@ -14,7 +13,6 @@ const main = async () => {
     const osCheck = process.platform;
 
     console.clear();
-
 
     if (osCheck !== "linux") {
         logger.error("Furnace is currently only supported on Linux. Please run this program on a Linux machine or WSL.");
