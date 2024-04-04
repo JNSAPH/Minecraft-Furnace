@@ -1,4 +1,11 @@
+'use client';
+
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
 const LogoText = () => {
+    const [isGlitching, setIsGlitching] = useState(false)
+
     let logoText = ""
     logoText += "███████╗██╗░░░██╗██████╗░███╗░░██╗░█████╗░░█████╗░███████╗\n"
     logoText += "██╔════╝██║░░░██║██╔══██╗████╗░██║██╔══██╗██╔══██╗██╔════╝\n"
@@ -6,6 +13,17 @@ const LogoText = () => {
     logoText += "██╔══╝░░██║░░░██║██╔══██╗██║╚████║██╔══██║██║░░██╗██╔══╝░░\n"
     logoText += "██║░░░░░╚██████╔╝██║░░██║██║░╚███║██║░░██║╚█████╔╝███████╗\n"
     logoText += "╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░╚════╝░╚══════╝"
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsGlitching(true);
+            setTimeout(() => {
+                setIsGlitching(false);
+            }, 500);
+        }, 10000 + Math.random() * 2000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     // Glitch effect on text
     const glitch = (text: string) => {
@@ -20,11 +38,14 @@ const LogoText = () => {
         return newText
     }
 
-
     return (
-        <pre className="leading-[19px] text-transparent bg-clip-text bg-gradient-to-b from-cerise to-blush">
-            {logoText}
-        </pre>
+        <motion.pre 
+            className="leading-[19px] text-transparent bg-clip-text bg-gradient-to-b from-cerise to-blush"
+            initial={{ opacity: 0, scale: 0.8}}
+            animate={{ opacity: 1, scale: 1}}
+            transition={{ duration: 0.75 }}>
+            {isGlitching ? glitch(logoText) : logoText}
+        </motion.pre>
     )
 }
 

@@ -1,6 +1,7 @@
 'use client'
 
 import confetti from 'canvas-confetti';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 interface CopyPasteTextPillProps {
@@ -27,7 +28,11 @@ const CopyPasteTextPill = ({ text }: CopyPasteTextPillProps) => {
     }
 
     return (
-        <div className="bg-blush px-[19px] py-[10px] bg-opacity-25 rounded-full flex flex-row items-center justify-center space-x-6">
+        <motion.div
+            className="bg-blush px-[19px] py-[10px] bg-opacity-25 rounded-full flex flex-row items-center justify-center space-x-6"
+            initial={{ opacity: 0, y: -20, scaleY: 0.8, scaleX: 0.8}}
+            animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1}}
+            transition={{ duration: 0.5, delay: 0.25 }}>
             <span>{text}</span>
             <div className="hover:scale-95 active:scale-105 transition cursor-pointer" onClick={handleConfetti}>
                 {copied ? (
@@ -40,7 +45,7 @@ const CopyPasteTextPill = ({ text }: CopyPasteTextPillProps) => {
                     </svg>
                 )}
             </div>
-        </div>
+        </motion.div>
     )
 }
 
