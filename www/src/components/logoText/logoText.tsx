@@ -40,7 +40,7 @@ const LogoText = () => {
 
     return (
         <motion.pre 
-            className="leading-[19px] text-transparent bg-clip-text bg-gradient-to-b from-cerise to-blush"
+            className="text-transparent bg-clip-text bg-gradient-to-b from-cerise to-blush text-xs leading-[15px] md:text-sm md:leading-[17px]"
             initial={{ opacity: 0, scale: 0.8}}
             animate={{ opacity: 1, scale: 1}}
             transition={{ duration: 0.75 }}>

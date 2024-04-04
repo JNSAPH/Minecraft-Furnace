@@ -7,13 +7,14 @@ interface TutorialTerminalProps {
 const TutorialTerminal = ({ step }: TutorialTerminalProps) => {
     return (
         <div className="relative select-none">
-            <div className="w-full max-w-[500px] mx-auto">
+            <div className="w-full mx-auto">
                 <Image
-                width={577}
-                height={385}
-                src={`/terminal_step${step}.png`} 
-                alt={`Image representing step ${step} in the terminal`}
-                className="w-full pointer-events-none" />
+                    width={500}
+                    height={300}
+                    src={`/terminal_step${step}.png`} 
+                    alt={`Image representing step ${step} in the terminal`}
+                    className="w-full h-auto max-w-full"
+                />
             </div>
         </div>
     );
