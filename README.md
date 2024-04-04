@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  Start a Minecraft Server in seconds with Furnace by running <code>curl -fsSL https://create-furnace-server.vercel.app/install | bash</code>
+  Start a Minecraft Server in seconds with Furnace by running <code>curl -fsSL https://startfurnace.com/install | bash</code>
 </p>
 
 
@@ -43,7 +43,7 @@ Furnace is compatible with the following operating systems:
 
 Launching a server with Furnace is a breeze! Simply follow these steps:
 
-1. Run the command <code>curl -fsSL https://create-furnace-server.vercel.app/install | bash</code> in the directory where you want your server to be created.
+1. Run the command <code>curl -fsSL https://startfurnace.com/install | bash</code> in the directory where you want your server to be created.
 2. Follow the installer prompts to complete the setup.
 3. Once installation is finished, navigate into the server directory using the `cd` command.
 4. Execute the start script to begin your Minecraft adventure.
