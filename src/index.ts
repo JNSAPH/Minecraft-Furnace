@@ -7,7 +7,9 @@ import { logger } from "@/utils/logger";
 import { GITHUB_URL } from '@/consts/consts';
 import { v4 as uuidv4 } from 'uuid';
 import os from 'os';
-import { acceptEULA, createFolder, deleteFolder, downloadFile, modifyServerProperties, runServerJAR } from '@/utils/generalUtils';
+import { acceptEULA, createFile, createFolder, deleteFolder, downloadFile, modifyServerProperties, runServerJAR } from '@/utils/generalUtils';
+import { generateStartScript } from '@/utils/startScriptGenerator';
+import chalk from 'chalk';
 
 const main = async () => {
     const s = spinner();
@@ -37,7 +39,7 @@ const main = async () => {
 
     await s.stop();
 
-    renderTitle();
+    renderTitle();    
 
     const configuration = await runCli({
         isJavaInstalled: javaStatus,
@@ -66,6 +68,7 @@ const main = async () => {
     // Generate Server Name
     const uuid = uuidv4();
     const shortUUID = uuid.replace(/-/g, '').substring(0, 8);
+    const jarName = "server.jar"
     const serverName = `${configuration.serverName as string}_${configuration.server_version ? configuration.server_version as string + "_" : ""}${shortUUID}`;
 
     try {
@@ -76,12 +79,12 @@ const main = async () => {
 
         // Download Server JAR
         s.message("Downloading Server JAR");
-        await downloadFile(jarURL as string, "server.jar", process.cwd() + `/${serverName}`);
+        await downloadFile(jarURL as string, jarName, process.cwd() + `/${serverName}`);
         logger.info("Server JAR Downloaded");
 
         // Run Server JAR
         s.message("Starting Server for the first time to generate eula & server.properties file")
-        await runServerJAR(process.cwd() + `/${serverName}/server.jar`, process.cwd() + `/${serverName}`);
+        await runServerJAR(process.cwd() + `/${serverName}/${jarName}`, process.cwd() + `/${serverName}`);
         logger.info("Created initial server files. Stopping server...");
 
         // Accept EULA 
@@ -105,9 +108,26 @@ const main = async () => {
 
         // Create start.sh file
         s.message("Creating start.sh file");
+        let startScript = generateStartScript(configuration, jarName);
+        await createFile(process.cwd() + `/${serverName}/` + startScript.fileName, startScript.script);
 
         // Finish
         s.stop("Finished!");
+        
+        console.log(
+            chalk.green(`Your server has been successfully set up!`) + "\n" +
+            chalk.green(`You can now start your server by running the following command:`) + "\n\n" +
+    
+            chalk.yellow.bold("Linux: ") + "\n" +
+            chalk.white(`cd <server_folder> && chmod +x start.sh && ./start.sh`) + "\n\n" +
+    
+            chalk.blueBright.bold("Windows: ") + "\n" +
+            chalk.white(`cd <server_folder> && start.bat`) + "\n\n" +
+    
+            chalk.green(`Thank you for using Furnace! If you have any issues, please open an issue on the GitHub repository (${GITHUB_URL}).`)
+        );
+        
+
     } catch (error) {
         logger.error(`Looks like something went wrong. Here's the error: \n${error}\n`)
         logger.error(`You can try running the program again. If the issue persists, please open an issue on the GitHub repository (${GITHUB_URL}).`)

@@ -7,13 +7,14 @@ export interface CliConfig {
 }
 
 export interface cliOptions {
-    serverName: string | symbol;
+    serverName: string;
     serverJars: string;
-    systemRam: string | symbol;
-    eula_accepted: boolean | symbol; 
-    custom_jar_url: string | symbol | null;
-    server_platform: string | symbol;
-    server_version: string | symbol | null;
+    allocated_ram: string;
+    auto_restart: boolean;
+    eula_accepted: boolean; 
+    custom_jar_url: string | null;
+    server_platform: string;
+    server_version: string | null;
     server_properties: serverProperties;
 }
 

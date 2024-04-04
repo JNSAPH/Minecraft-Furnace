@@ -83,6 +83,10 @@ export async function deleteFolder(folderPath: string): Promise<void> {
     }
 }
 
+export async function createFile(filePath: string, content: string): Promise<void> {
+    await fs.writeFileSync(filePath, content);
+}
+
 export async function sortMinecraftVersionServerList(versions: string[]) {
     return versions.sort((a, b) => {
         const partsA = a.split('.').map(Number);

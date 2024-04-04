@@ -20,7 +20,7 @@ export const runCli = async (config: CliConfig) => {
             message: "What is the URL of the custom JAR?",
             placeholder: "https://example.com/custom.jar",
             validate: value => !value.startsWith("http") ? "URL must start with http or https" : undefined
-        });
+        }) as string | null;
     } else {
         // Fetch server jar versions
         const s = spinner();
@@ -40,20 +40,30 @@ export const runCli = async (config: CliConfig) => {
             message: "What Minecraft Server Version do you want to use?",
             placeholder: getLatestMinecraftServerVersion(cliOptions.server_platform, config.serverJars),
             validate: value => validateMinecraftServerVersion(value, cliOptions.server_platform, config.serverJars)
-        });
+        }) as string | null;
     }
 
-    cliOptions.systemRam = await p.text({
+    cliOptions.allocated_ram = await p.text({
         message: `How much RAM do you want to allocate to the server? (in GB, Max: ${config.systemRam}GB)`,
-        placeholder: (config.systemRam / 2).toString(),
-        initialValue: (config.systemRam / 2).toString(),
-        validate: value => isNaN(parseInt(value)) || parseInt(value) < 1 || parseInt(value) > config.systemRam ? `RAM must be a number between 1 and ${config.systemRam}` : undefined
-    });
+        placeholder: Math.floor((config.systemRam / 2)).toString(),
+        initialValue: Math.floor((config.systemRam / 2)).toString(),
+        validate: value => {
+            if (isNaN(parseInt(value))) return "RAM must be a number";
+            if (parseInt(value) < 1) return "RAM must be at least 1GB";
+            if (parseInt(value) !== parseFloat(value)) return "RAM cannot be a fraction of a GB";
+            if (parseInt(value) > config.systemRam) return `RAM must be less than or equal to ${config.systemRam}GB`;
+        }
+    }) as string;
+
+    cliOptions.auto_restart = await p.confirm({
+        message: "Do you want the server to automatically restart if it crashes?",
+        initialValue: true
+    }) as boolean;
 
     cliOptions.eula_accepted = await p.confirm({
         message: "Have you read and accepted the Minecraft EULA? (https://www.minecraft.net/en-us/eula)",
         initialValue: true
-    });
+    }) as boolean;
 
     cliOptions.serverName = await p.text({
         message: "What is the name of the server?",
@@ -64,7 +74,7 @@ export const runCli = async (config: CliConfig) => {
             if (value.length > 30) return "Server name must be less than 30 characters long";
             if (value.match(/[^a-zA-Z0-9_]/)) return "Server name must only contain letters, numbers, and underscores";
         }
-    });
+    }) as string;
 
     cliOptions.server_properties = await p.group({
         server_motd: () => p.text({
@@ -111,17 +121,11 @@ function generateSummary(cliOptions: cliOptions) {
         chalk.green("◇  ") + chalk.bold("Summary") + "\n" +
         chalk.gray("├  ") + chalk.white("Server Platform: ") + chalk.gray(cliOptions.server_platform) + "\n";
 
-    if (cliOptions.custom_jar_url) {
-        summary += chalk.gray("├  ") + chalk.white("Custom JAR URL: ") + chalk.gray(cliOptions.custom_jar_url) + "\n";
-    }
-
-    if (cliOptions.server_version) {
-        summary += chalk.gray("├  ") + chalk.white("Server Version: ") + chalk.gray(cliOptions.server_version) + "\n";
-    }
-
-    summary += chalk.gray("├  ") + chalk.white("Allocated RAM ") + chalk.gray(cliOptions.systemRam) + "\n";
-
-
+    // If custom JAR URL is provided, show it in the summary
+    if (cliOptions.custom_jar_url) summary += chalk.gray("├  ") + chalk.white("Custom JAR URL: ") + chalk.gray(cliOptions.custom_jar_url) + "\n";
+    if (cliOptions.server_version) summary += chalk.gray("├  ") + chalk.white("Server Version: ") + chalk.gray(cliOptions.server_version) + "\n";
+    
+    summary += chalk.gray("├  ") + chalk.white("Allocated RAM ") + chalk.gray(cliOptions.allocated_ram) + "\n";
     summary += chalk.gray("│") + "\n" +
         chalk.gray("├  ") + chalk.white("Server MOTD: ") + chalk.gray(cliOptions.server_properties.server_motd) + "\n" +
         chalk.gray("├  ") + chalk.white("Server Port: ") + chalk.gray(cliOptions.server_properties.server_port) + "\n" +
