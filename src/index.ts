@@ -12,12 +12,12 @@ import { acceptEULA, createFolder, deleteFolder, downloadFile, modifyServerPrope
 const main = async () => {
     const s = spinner();
     await s.start("Starting Furnace...");
+
+    // Get System Information
     const javaStatus = await isJavaInstalled();
+    const serverJars = await getServerJarsList();
     const systemRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(0);
     const osCheck = process.platform;
-
-    await s.message("Checking for server JARs...");
-    const serverJars = await getServerJarsList();
 
     console.clear();
 

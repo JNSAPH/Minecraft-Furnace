@@ -1,8 +1,10 @@
 import * as p from "@clack/prompts";
+import { spinner } from '@clack/prompts';
 import { logger } from "@/utils/logger";
 import { getLatestMinecraftServerVersion, validateMinecraftServerVersion } from "@/utils/validateMinecraftServerVersion";
 import chalk from "chalk";
 import type { cliOptions, CliConfig } from "@/types/cliOptions";
+import { loadServerJars } from "@/jars/serverJars";
 
 export const runCli = async (config: CliConfig) => {
     const cliOptions: cliOptions = {} as cliOptions;
@@ -10,15 +12,30 @@ export const runCli = async (config: CliConfig) => {
     cliOptions.server_platform = await p.select({
         message: "What Minecraft Server Platform do you want to use?",
         options: Object.keys(config.serverJars).map(server => ({ value: server, label: server }))
-    });
+    }) as string;
 
     if (cliOptions.server_platform === "Custom JAR") {
+        // Custom JAR
         cliOptions.custom_jar_url = await p.text({
             message: "What is the URL of the custom JAR?",
             placeholder: "https://example.com/custom.jar",
             validate: value => !value.startsWith("http") ? "URL must start with http or https" : undefined
         });
     } else {
+        // Fetch server jar versions
+        const s = spinner();
+        await s.start("Fetching server jar versions...");
+
+        let serverJarVersions = await loadServerJars(cliOptions.server_platform);
+        if (!serverJarVersions) {
+            logger.error("An error occurred while fetching the server jar versions. Exiting...");
+            process.exit(1);
+        }
+
+        config.serverJars[cliOptions.server_platform] = serverJarVersions;
+
+        await s.stop("Server jar versions fetched successfully!");
+
         cliOptions.server_version = await p.text({
             message: "What Minecraft Server Version do you want to use?",
             placeholder: getLatestMinecraftServerVersion(cliOptions.server_platform, config.serverJars),
@@ -40,8 +57,8 @@ export const runCli = async (config: CliConfig) => {
 
     cliOptions.serverName = await p.text({
         message: "What is the name of the server?",
-        placeholder: `${(cliOptions.server_platform as string).replaceAll(" ", "_")}_SERVER_FURNACE`,
-        initialValue: `${(cliOptions.server_platform as string).replaceAll(" ", "_")}_SERVER_FURNACE`,
+        placeholder: `${(cliOptions.server_platform).replaceAll(" ", "_")}_SERVER_FURNACE`,
+        initialValue: `${(cliOptions.server_platform).replaceAll(" ", "_")}_SERVER_FURNACE`,
         validate: value => {
             if (value.length < 3) return "Server name must be at least 3 characters long";
             if (value.length > 30) return "Server name must be less than 30 characters long";
