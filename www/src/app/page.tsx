@@ -11,7 +11,7 @@ export default function Home() {
       <section className="h-full w-full flex flex-col bg-gradient-to-t from-bg-dark to-bg-light p-12 space-y-4">
         <div className="flex flex-col space-y-4 justify-center h-full items-center bg-gradient-to-t from-bg-mid to-bg-light rounded-2xl">
           <LogoText />
-          <CopyPasteTextPill text={'NO COMMAND AVAILABLE YET'} />
+          <CopyPasteTextPill text={'curl -fsSL https://create-furnace-server.vercel.app/install | bash'} />
         </div>
         <div className="flex flex-row justify-between">
           <div className="flex flex-row space-x-4">

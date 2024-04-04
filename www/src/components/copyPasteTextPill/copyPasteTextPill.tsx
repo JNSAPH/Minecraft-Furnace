@@ -33,7 +33,9 @@ const CopyPasteTextPill = ({ text }: CopyPasteTextPillProps) => {
             initial={{ opacity: 0, y: -20, scaleY: 0.8, scaleX: 0.8}}
             animate={{ opacity: 1, y: 0, scaleY: 1, scaleX: 1}}
             transition={{ duration: 0.5, delay: 0.25 }}>
-            <span>{text}</span>
+            <code>
+                {text}
+            </code>
             <div className="hover:scale-95 active:scale-105 transition cursor-pointer" onClick={handleConfetti}>
                 {copied ? (
                     <svg width="20" viewBox="0 0 18 18" fill="none" className='fill-blush stroke-blush'>
