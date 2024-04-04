@@ -1,6 +1,15 @@
+import type { IServerJars } from "@/types/IServerJars";
+
+export interface CliConfig {
+    isJavaInstalled: boolean | null;
+    serverJars: IServerJars;
+    systemRam: number;
+}
+
 export interface cliOptions {
     serverName: string | symbol;
     serverJars: string;
+    systemRam: string | symbol;
     eula_accepted: boolean | symbol; 
     custom_jar_url: string | symbol | null;
     server_platform: string | symbol;

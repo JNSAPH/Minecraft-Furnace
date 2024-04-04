@@ -11,9 +11,7 @@ export async function downloadFile(url: string, fileName: string, destination: s
         responseType: 'stream',
     });
 
-    const writer = fs.createWriteStream
-        (path.join(destination, fileName));
-
+    const writer = fs.createWriteStream(path.join(destination, fileName));
     response.data.pipe(writer);
 
     return new Promise((resolve, reject) => {
@@ -64,10 +62,8 @@ export async function acceptEULA(serverFolder: string): Promise<void> {
 }
 
 export async function modifyServerProperties(serverFolder: string, properties: { [key: string]: string }): Promise<void> {
-    // get content of file 
     const content = await fs.readFileSync(path.join(serverFolder, 'server.properties'), 'utf-8');
 
-    // replace only keys that are in the properties object
     const newContent = content.split('\n').map(line => {
         const [key, value] = line.split('=');
 
@@ -79,4 +75,30 @@ export async function modifyServerProperties(serverFolder: string, properties: {
     }).join('\n');
     
     await fs.writeFileSync(path.join(serverFolder, 'server.properties'), newContent);
+}
+
+export async function deleteFolder(folderPath: string): Promise<void> {
+    if (fs.existsSync(folderPath)) {
+        fs.rmdirSync(folderPath, { recursive: true });
+    }
+}
+
+export async function sortMinecraftVersionServerList(versions: string[]) {
+    return versions.sort((a, b) => {
+        const partsA = a.split('.').map(Number);
+        const partsB = b.split('.').map(Number);
+
+        // Compare major versions
+        if (partsA[0] !== partsB[0]) {
+            return partsA[0] - partsB[0];
+        }
+
+        // Compare minor versions
+        if (partsA[1] !== partsB[1]) {
+            return partsA[1] - partsB[1];
+        }
+
+        // Compare patch versions
+        return partsA[2] - partsB[2];
+    });
 }

@@ -1,11 +1,13 @@
 import type { IServerJars } from "@/types/IServerJars";
 import { getPurpurJars } from "@/jars/purpur";
+import { getPaperJars } from "@/jars/paper";
+import { getSpigotJars } from "@/jars/spigot";
 
 export const getServerJarsList = async (): Promise<IServerJars> => {
-    let purpurJars = await getPurpurJars();
-    
     const serverJars: IServerJars = {
-        "Purpur": purpurJars,
+        "Purpur": await getPurpurJars(),
+        "Paper": await getPaperJars(),
+        "Spigot": await getSpigotJars(),
         "Custom JAR": {}
     };
 

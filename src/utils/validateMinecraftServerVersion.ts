@@ -10,5 +10,8 @@ export const validateMinecraftServerVersion = (value: string, server_platform: s
 }
 
 export const getLatestMinecraftServerVersion = (server_platform: string | any, serverJars: IServerJars) => {
-    return Object.keys(serverJars[server_platform])[0];
+    let numberOfVersions = Object.keys(serverJars[server_platform]).length;
+    let versions = Object.keys(serverJars[server_platform]);
+    
+    return versions[numberOfVersions - 1];
 }

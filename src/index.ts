@@ -4,13 +4,20 @@ import { runCli } from "@/cli/runCli";
 import { isJavaInstalled } from "@/utils/shellStuff";
 import { getServerJarsList } from "@/jars/serverJars";
 import { logger } from "@/utils/logger";
+import { GITHUB_URL } from '@/consts/consts';
 import { v4 as uuidv4 } from 'uuid';
-import { acceptEULA, createFolder, downloadFile, modifyServerProperties, runServerJAR } from '@/utils/fs_utils';
+import os from 'os';
+import { acceptEULA, createFolder, deleteFolder, downloadFile, modifyServerProperties, runServerJAR } from '@/utils/generalUtils';
 
 const main = async () => {
+    const s = spinner();
+    await s.start("Starting Furnace...");
     const javaStatus = await isJavaInstalled();
-    const serverJars = await getServerJarsList();
+    const systemRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(0);
     const osCheck = process.platform;
+
+    await s.message("Checking for server JARs...");
+    const serverJars = await getServerJarsList();
 
     console.clear();
 
@@ -28,19 +35,24 @@ const main = async () => {
 
     logger.info("Java is installed. Continuing...");
 
+    await s.stop();
+
     renderTitle();
 
     const configuration = await runCli({
         isJavaInstalled: javaStatus,
-        serverJars: serverJars
+        serverJars,
+        systemRam: parseInt(systemRam)
     });
 
-    const s = spinner();
-    s.start();
+    logger.debug(configuration);
 
+    await s.start("Setting up server...");
+
+    // Check if user provided a custom JAR URL
     let jarURL = null;
-
-    if (configuration.custom_jar_url === null) {
+    
+    if (!configuration.custom_jar_url) {
         // User selected a server platform 
         if (configuration.server_platform in serverJars) {
             jarURL = serverJars[configuration.server_platform as string][configuration.server_version as string];
@@ -49,23 +61,30 @@ const main = async () => {
         jarURL = configuration.custom_jar_url;
     }
 
-    try {
-        const uuid = uuidv4();
-        const shortUUID = uuid.replace(/-/g, '').substring(0, 8);
-        let serverName: string = configuration.serverName as string + "_" + shortUUID;
+    logger.debug(`Jar URL: ${jarURL as string}`);
 
+    // Generate Server Name
+    const uuid = uuidv4();
+    const shortUUID = uuid.replace(/-/g, '').substring(0, 8);
+    const serverName = `${configuration.serverName as string}_${configuration.server_version ? configuration.server_version as string + "_" : ""}${shortUUID}`;
+
+    try {
+        // Create Server Folder
         s.message("Creating Server Folder");
         await createFolder(`${serverName}`, process.cwd());
         logger.info(`Server Folder Created: ${serverName}`);
 
+        // Download Server JAR
         s.message("Downloading Server JAR");
         await downloadFile(jarURL as string, "server.jar", process.cwd() + `/${serverName}`);
         logger.info("Server JAR Downloaded");
 
+        // Run Server JAR
         s.message("Starting Server for the first time to generate eula & server.properties file")
         await runServerJAR(process.cwd() + `/${serverName}/server.jar`, process.cwd() + `/${serverName}`);
         logger.info("Created initial server files. Stopping server...");
 
+        // Accept EULA 
         s.message("Checking EULA Status");
         if (configuration.eula_accepted) {
             s.message("User accepted EULA in setup. Accepting EULA for the user.");
@@ -75,6 +94,7 @@ const main = async () => {
             logger.warn("During Setup, you did not accept the EULA. You will need to manually accept the EULA in the server folder to start the server.");
         }
 
+        // Modify server.properties file
         s.message("Modify server.properties file");
         await modifyServerProperties(process.cwd() + `/${serverName}`, {
             "motd": configuration.server_properties.server_motd,
@@ -83,11 +103,18 @@ const main = async () => {
         });
         logger.info("Modified server.properties file with user input.");
 
+        // Create start.sh file
         s.message("Creating start.sh file");
 
+        // Finish
         s.stop("Finished!");
     } catch (error) {
-        logger.error(error);
+        logger.error(`Looks like something went wrong. Here's the error: \n${error}\n`)
+        logger.error(`You can try running the program again. If the issue persists, please open an issue on the GitHub repository (${GITHUB_URL}).`)
+        logger.error(`Cleaning up..`);
+
+        await deleteFolder(`${serverName}`);
+        
         process.exit(1);
     } 
 }
