@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.2.10",
+    "@types/canvas-confetti": "^1.6.4",
+    "canvas-confetti": "^1.9.2",
+    "framer-motion": "^11.0.24",
+    "next": "14.1.4",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.1.4"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "typescript": "^5",
