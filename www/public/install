@@ -1,3 +1,52 @@
 #!/bin/bash
 
-echo "Furnace is not yet ready for installation, but will be soon!"
+# Temporary directory to store downloaded files
+tmp_dir="/tmp/create-furnace-server"
+
+# Name of the CLI App
+cli_app_name="FurnaceCLILinux"
+
+# Function to check for the latest release version
+get_latest_release() {
+    curl --silent "https://api.github.com/repos/JNSAPH/create-furnace-server/releases/latest" |
+    grep '"tag_name":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+}
+
+# Function to download the latest release
+download_latest_release() {
+    local latest_version=$1
+    local download_url="https://github.com/JNSAPH/create-furnace-server/releases/download/$latest_version/$cli_app_name"
+    echo "Latest release download URL: $download_url"
+    
+    echo "Downloading the latest release..."
+    mkdir -p "$tmp_dir"
+    wget -qO "$tmp_dir/$cli_app_name" "$download_url"
+}
+
+# Function to run the downloaded CLI app
+run_cli_app() {
+    local cli_app_path="$tmp_dir/$cli_app_name"
+    
+    echo "Running the CLI app..."
+    chmod +x "$cli_app_path"
+    "$cli_app_path" "$@" < /dev/tty
+}
+
+# Main script
+
+# Check if 'curl' and 'wget' are installed
+command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but it's not installed. Aborting."; exit 1; }
+command -v wget >/dev/null 2>&1 || { echo >&2 "wget is required but it's not installed. Aborting."; exit 1; }
+
+latest_release=$(get_latest_release)
+if [[ -z "$latest_release" ]]; then
+    echo "Failed to fetch the latest release information. Exiting..."
+    exit 1
+fi
+
+echo "Latest release version: $latest_release"
+
+download_latest_release "$latest_release"
+
+run_cli_app "$@"
