@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [ ubuntu-latest, windows-latest ]
+        platform: [ ubuntu-latest ]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -33,36 +33,30 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: furnace
-          path: furnace
+          path: ./furnace
 
   release:
+    permissions:
+      contents: write
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: furnace
+        uses: actions/download-artifact@v4
 
       - name: Package release
         run: |
+          chmod +x furnace
           tar -czvf furnace.tar.gz furnace
-          mv furnace.tar.gz furnace-$VERSION.tar.gz
+          mv furnace.tar.gz furnace-${{ github.event.inputs.version }}.tar.gz
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: Furnace CLI Release
-          draft: false
-          prerelease: false
+      - name: Display structure of the artifact
+        run: ls -R
 
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./furnace-$VERSION.tar.gz
-          asset_name: furnace-$VERSION.tar.gz
-          asset_content_type: application/gzip
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with: 
+          tag_name: ${{ github.event.inputs.version }}
+          generate_release_notes: true
+          files: |
+            furnace-${{ github.event.inputs.version }}.tar.gz
