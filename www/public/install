@@ -6,6 +6,21 @@ tmp_dir="/tmp/create-furnace-server"
 # Name of the CLI App
 cli_app_name="FurnaceCLILinux"
 
+echo "
+███████╗██╗░░░██╗██████╗░███╗░░██╗░█████╗░░█████╗░███████╗
+██╔════╝██║░░░██║██╔══██╗████╗░██║██╔══██╗██╔══██╗██╔════╝
+█████╗░░██║░░░██║██████╔╝██╔██╗██║███████║██║░░╚═╝█████╗░░
+██╔══╝░░██║░░░██║██╔══██╗██║╚████║██╔══██║██║░░██╗██╔══╝░░
+██║░░░░░╚██████╔╝██║░░██║██║░╚███║██║░░██║╚█████╔╝███████╗
+╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░╚════╝░╚══════╝
+
+/ / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
+
+Welcome to the Furnace CLI Installer! This script will download 
+the latest version of the Furnace CLI and run it for you. This
+might take a few seconds depending on your internet connection.
+"
+
 # Function to check for the latest release version
 get_latest_release() {
     curl --silent "https://api.github.com/repos/JNSAPH/create-furnace-server/releases/latest" |
@@ -17,9 +32,7 @@ get_latest_release() {
 download_latest_release() {
     local latest_version=$1
     local download_url="https://github.com/JNSAPH/create-furnace-server/releases/download/$latest_version/$cli_app_name"
-    echo "Latest release download URL: $download_url"
-    
-    echo "Downloading the latest release..."
+    echo "=> Downloading the latest release from GitHub..."
     mkdir -p "$tmp_dir"
     wget -qO "$tmp_dir/$cli_app_name" "$download_url"
 }
@@ -28,7 +41,7 @@ download_latest_release() {
 run_cli_app() {
     local cli_app_path="$tmp_dir/$cli_app_name"
     
-    echo "Running the CLI app..."
+    echo "=> Running the CLI app..."
     chmod +x "$cli_app_path"
     "$cli_app_path" "$@" < /dev/tty
 }
@@ -45,7 +58,7 @@ if [[ -z "$latest_release" ]]; then
     exit 1
 fi
 
-echo "Latest release version: $latest_release"
+echo "=> Latest CLI release version: $latest_release"
 
 download_latest_release "$latest_release"
 

@@ -28,26 +28,28 @@ const GetStartedComponent = () => {
             <p className="font-bold text-2xl">Get Started</p>
             <p></p>
             <div>
-            <div className="grid grid-cols-1 md:grid-cols-[300px_auto] gap-x-4 gap-y-4">
-            <div className="space-y-8">
-                <div>
-                    <p onClick={() => setCurrentStep(1)}
-                        className={`font-bold text-xl cursor-pointer transition ${currentStep === 1 ? "text-cerise" : "text-white"}`}>Step 1</p>
-                    <p>Run the Installer Script</p>
+                <div className="grid grid-cols-1 md:grid-cols-[300px_auto] gap-x-4 gap-y-4">
+                    <div className="space-y-8">
+                        <div className="w-full">
+                            <p onClick={() => setCurrentStep(1)}
+                                className={`font-bold text-xl cursor-pointer transition ${currentStep === 1 ? "text-cerise" : "text-white"}`}>
+                                Step 1
+                            </p>
+                            <p>Run the Installer Script</p>
+                        </div>
+                        <div>
+                            <p onClick={() => setCurrentStep(2)}
+                                className={`font-bold text-xl cursor-pointer transition ${currentStep === 2 ? "text-cerise" : "text-white"}`}>Step 2</p>
+                            <p>Follow the Instructions and fill out the questionnaire</p>
+                        </div>
+                        <div>
+                            <p onClick={() => setCurrentStep(3)}
+                                className={`font-bold text-xl cursor-pointer transition ${currentStep === 3 ? "text-cerise" : "text-white"}`}>Step 3</p>
+                            <p>Start the Server using the generated Script</p>
+                        </div>
+                    </div>
+                    <TutorialTerminal step={currentStep} />
                 </div>
-                <div>
-                    <p onClick={() => setCurrentStep(2)}
-                        className={`font-bold text-xl cursor-pointer transition ${currentStep === 2 ? "text-cerise" : "text-white"}`}>Step 2</p>
-                    <p>Follow the Instructions and fill out the questionnaire</p>
-                </div>
-                <div>
-                    <p onClick={() => setCurrentStep(3)}
-                        className={`font-bold text-xl cursor-pointer transition ${currentStep === 3 ? "text-cerise" : "text-white"}`}>Step 3</p>
-                    <p>Start the Server using the generated Script</p>
-                </div>
-            </div>
-            <TutorialTerminal step={currentStep} />
-        </div>
             </div>
         </div>
     )
