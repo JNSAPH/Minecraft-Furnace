@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: 
+      - name: Build Furnace CLI
         run: bun build . --compile --outfile furnace
 
       - name: Upload artifact
@@ -35,34 +35,34 @@ jobs:
           name: furnace
           path: furnace
 
-    release:
-      permissions:
-        contents: write
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Download artifact
-          uses: actions/download-artifact
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: furnace
 
-        - name: Package release
-          run: |
-            tar -czvf furnace.tar.gz furnace
-            mv furnace.tar.gz furnace-$INPUT_VERSION.tar.gz
+      - name: Package release
+        run: |
+          tar -czvf furnace.tar.gz furnace
+          mv furnace.tar.gz furnace-$VERSION.tar.gz
 
-        - name: Create release
-          uses: actions/create-release@v2
-          with:
-            tag_name: ${{ github.ref }}
-            release_name: ${{ github.ref }}
-            body: |
-              Furnace CLI Release
-            draft: false
-            prerelease: false
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: Furnace CLI Release
+          draft: false
+          prerelease: false
 
-        - name: Upload release asset
-          uses: actions/upload-release-asset@v1
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./furnace-$INPUT_VERSION.tar.gz
-            asset_name: furnace-$INPUT_VERSION.tar.gz
-            asset_content_type: application/gzip
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./furnace-$VERSION.tar.gz
+          asset_name: furnace-$VERSION.tar.gz
+          asset_content_type: application/gzip
