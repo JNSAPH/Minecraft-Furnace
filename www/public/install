@@ -1,11 +1,29 @@
 #!/bin/bash
 
-# Temporary directory to store downloaded files
-tmp_dir="/tmp/create-furnace-server"
+# Define the repository owner and name
+owner="JNSAPH"
+repo="create-furnace-server"
+tmp_dir="/tmp/$repo" # Adjusted tmp_dir path
 
-# Name of the CLI App
-cli_app_name="FurnaceCLILinux"
+# Use curl to fetch the latest release information from GitHub API
+release_info=$(curl -s "https://api.github.com/repos/$owner/$repo/releases/latest")
 
+# Extract the download URL for the .tar.gz file from the JSON response
+download_url=$(echo "$release_info" | grep -oP '"browser_download_url": "\K(.*furnace-[0-9.]+\.tar\.gz)"' | head -1 | tr -d '"')
+
+# Extract the latest version from the download URL
+get_latest_release() {
+    curl --silent "https://api.github.com/repos/JNSAPH/create-furnace-server/releases/latest" |
+    grep '"tag_name":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+}
+
+latest_version=$(get_latest_release)
+
+# Define the filename
+filename="furnace-${latest_version}.tar.gz"
+
+# Welcome message and instructions
 echo "
 ███████╗██╗░░░██╗██████╗░███╗░░██╗░█████╗░░█████╗░███████╗
 ██╔════╝██║░░░██║██╔══██╗████╗░██║██╔══██╗██╔══██╗██╔════╝
@@ -16,50 +34,32 @@ echo "
 
 / / / / / / / / / / / / / / / / / / / / / / / / / / / / / 
 
+Latest Version: $latest_version
+
 Welcome to the Furnace CLI Installer! This script will download 
 the latest version of the Furnace CLI and run it for you. This
 might take a few seconds depending on your internet connection.
 "
 
-# Function to check for the latest release version
-get_latest_release() {
-    curl --silent "https://api.github.com/repos/JNSAPH/create-furnace-server/releases/latest" |
-    grep '"tag_name":' |
-    sed -E 's/.*"([^"]+)".*/\1/'
-}
 
-# Function to download the latest release
-download_latest_release() {
-    local latest_version=$1
-    local download_url="https://github.com/JNSAPH/create-furnace-server/releases/download/$latest_version/$cli_app_name"
-    echo "=> Downloading the latest release from GitHub..."
-    mkdir -p "$tmp_dir"
-    wget -qO "$tmp_dir/$cli_app_name" "$download_url"
-}
+# Create the tmp directory if it doesn't exist
+echo "=> Creating tmp directory..."
+mkdir -p "$tmp_dir"
 
-# Function to run the downloaded CLI app
-run_cli_app() {
-    local cli_app_path="$tmp_dir/$cli_app_name"
-    
-    echo "=> Running the CLI app..."
-    chmod +x "$cli_app_path"
-    "$cli_app_path" "$@" < /dev/tty
-}
+# Download the latest release tarball from GitHub
+echo "=> Downloading $filename to $tmp_dir..."
+curl -s -L "$download_url" -o "$tmp_dir/$filename"
+echo "=> Download complete: $filename"
 
-# Main script
+# Unpack the downloaded file into tmp_dir
+echo "=> Unpacking $filename into $tmp_dir..."
+tar -xf "$tmp_dir/$filename" -C "$tmp_dir"
+echo "=> Unpacking complete"
 
-# Check if 'curl' and 'wget' are installed
-command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but it's not installed. Aborting."; exit 1; }
-command -v wget >/dev/null 2>&1 || { echo >&2 "wget is required but it's not installed. Aborting."; exit 1; }
+# Execute the furnace script
+echo "=> Executing furnace script..."
+chmod +x "$current_dir/$tmp_dir/furnace/furnace"
+"$current_dir/$tmp_dir/furnace/furnace" < /dev/tty
 
-latest_release=$(get_latest_release)
-if [[ -z "$latest_release" ]]; then
-    echo "Failed to fetch the latest release information. Exiting..."
-    exit 1
-fi
-
-echo "=> Latest CLI release version: $latest_release"
-
-download_latest_release "$latest_release"
-
-run_cli_app "$@"
+# Clean up the tmp directory
+#rm -rf "$tmp_dir"

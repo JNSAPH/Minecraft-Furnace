@@ -119,10 +119,10 @@ const main = async () => {
             chalk.green(`You can now start your server by running the following command:`) + "\n\n" +
     
             chalk.yellow.bold("Linux: ") + "\n" +
-            chalk.white(`cd <server_folder> && chmod +x start.sh && ./start.sh`) + "\n\n" +
+            chalk.white(`cd ${serverName} && chmod +x start.sh && ./start.sh`) + "\n\n" +
     
-            chalk.blueBright.bold("Windows: ") + "\n" +
-            chalk.white(`cd <server_folder> && start.bat`) + "\n\n" +
+            // chalk.blueBright.bold("Windows: ") + "\n" +
+            // chalk.white(`cd ${serverName} && start.bat`) + "\n\n" +
     
             chalk.green(`Thank you for using Furnace! If you have any issues, please open an issue on the GitHub repository (${GITHUB_URL}).`)
         );
