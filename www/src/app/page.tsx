@@ -4,18 +4,16 @@ import { DocumentationPill, GetStartedPill, GitHubPill } from "@/components/pill
 import Footer from "@/components/footer/footer";
 import GetStartedComponent from "@/components/getStarted/getStarted";
 import AboutSection from "@/components/about/about";
+import Header from "@/components/Header/Header";
 
 export default function Home() {
   return (
     <main className="h-screen bg-bg-dark">
       {/* Head */}
       <section className="h-full w-full flex flex-col bg-gradient-to-t from-bg-dark to-bg-light p-2 md:p-12 space-y-4">
-        <div className="flex flex-col space-y-4 justify-center h-full items-center bg-gradient-to-t from-bg-mid to-bg-light rounded-2xl p-4">
-          <LogoText />
-          <CopyPasteTextPill text={'curl -fsSL https://startfurnace.com/install | bash'} />
-        </div>
+        <Header />
         <div className="flex flex-wrap flex-row justify-between">
-          <div className="flex flex-wrap flex-row space-x-4">
+          <div className="flex flex-wrap flex-row space-x-4 pb-2">
             <DocumentationPill /> 
             <GetStartedPill />
           </div>
