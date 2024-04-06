@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 const LogoText = () => {
     const [isGlitching, setIsGlitching] = useState(false)
+    const [isJSEnabled, setIsJSEnabled] = useState(false)
 
     let logoText = ""
     logoText += "███████╗██╗░░░██╗██████╗░███╗░░██╗░█████╗░░█████╗░███████╗\n"
@@ -15,6 +16,8 @@ const LogoText = () => {
     logoText += "╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░╚════╝░╚══════╝"
 
     useEffect(() => {
+        setIsJSEnabled(true)
+
         const interval = setInterval(() => {
             setIsGlitching(true);
             setTimeout(() => {
@@ -38,14 +41,26 @@ const LogoText = () => {
         return newText
     }
 
+    const classString = "text-transparent bg-clip-text bg-gradient-to-b from-cerise to-blush text-xs leading-[15px] md:text-sm md:leading-[17px]"
+
     return (
-        <motion.pre 
-            className="text-transparent bg-clip-text bg-gradient-to-b from-cerise to-blush text-xs leading-[15px] md:text-sm md:leading-[17px]"
-            initial={{ opacity: 0, scale: 0.8}}
-            animate={{ opacity: 1, scale: 1}}
-            transition={{ duration: 0.75 }}>
-            {isGlitching ? glitch(logoText) : logoText}
-        </motion.pre>
+        <>
+            {isJSEnabled && (
+                <motion.pre
+                className={classString}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.75 }}>
+                {isGlitching ? glitch(logoText) : logoText}
+            </motion.pre>
+            )}
+            <noscript>
+                <pre
+                    className={classString}>
+                    {logoText}
+                </pre>
+            </noscript>
+        </>
     )
 }
 
