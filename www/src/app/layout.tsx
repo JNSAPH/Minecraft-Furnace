@@ -5,8 +5,14 @@ import "./globals.css";
 const font = Poppins({ weight: ["400", "500", "600", "700"], subsets: ["latin"]});
 
 export const metadata: Metadata = {
-  title: "Furnace",
-  description: "Create Minecraft servers in seconds with Furnace.",
+  title: "Furnace - CLI",
+  description: "Spin up a Minecraft server less than 60 seconds with Furnace.",
+  keywords: ["Minecraft", "Server", "CLI", "Minecraft Furnace", "Start"],
+  twitter: {
+    card: "summary_large_image",
+    creator: "@jnsaph",
+    images: ["startfurnace.com/summary_large_image.png"]
+  },
 };
 
 export default function RootLayout({
