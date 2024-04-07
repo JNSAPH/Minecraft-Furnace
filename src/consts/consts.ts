@@ -37,3 +37,4 @@ export const DEFAULT_APP_NAME = 'furnace';
 export const DEFAULT_APP_DESCRIPTION = 'A CLI tool to create Minecraft servers with ease.';
 
 export const GITHUB_URL = 'https://github.com/JNSAPH/create-furnace-server'
+export const VanillaJarBaseURL = 'https://cdn.jnsaph.com/jnsaph/furnace_jars'

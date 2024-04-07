@@ -1,8 +1,20 @@
 import type { SpecificJar } from "@/types/IServerJars";
-
+import { VanillaJarBaseURL } from "@/consts/consts";
 
 export async function getVanillaJars(): Promise<SpecificJar> {
-    return {
-        "1.20.4": "https://piston-data.mojang.com/v1/objects/8dd1a28015f51b1803213892b50b7b4fc76e594d/server.jar"
+    let versions = await getAllVersions();
+    let jarURLs: SpecificJar = {};
+
+    for (const [key, value] of Object.entries(versions)) {
+        jarURLs[key] = VanillaJarBaseURL + value;
     }
+
+    return jarURLs;
+}
+
+async function getAllVersions() {
+    let response = await fetch(VanillaJarBaseURL + "/index.json");
+    let data = await response.json();
+
+    return data;
 }
