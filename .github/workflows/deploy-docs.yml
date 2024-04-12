@@ -22,7 +22,7 @@ jobs:
         run: |
           cd docs  # Navigate to the docs directory
           npm install  # Or npm install, depending on your setup
-          npm build  # Or npm run build
+          npm run build  # Or npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
