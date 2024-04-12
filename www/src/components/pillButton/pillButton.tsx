@@ -3,7 +3,7 @@ import React from "react";
 
 export const DocumentationPill = () => {
     return (
-        <a href="#" className="w-[200px] h-[40px] select-none bg-fuchsia bg-opacity-25 hover:bg-opacity-50 active:brightness-90 transition rounded-full flex items-center justify-center cursor-pointer">
+        <a href="https://jnsaph.github.io/create-furnace-server/" className="w-[200px] h-[40px] select-none bg-fuchsia bg-opacity-25 hover:bg-opacity-50 active:brightness-90 transition rounded-full flex items-center justify-center cursor-pointer">
             <svg height="20" viewBox="0 0 16 14" fill="none" className="mr-2 stroke-fuchsia">
                 <path d="M4.0625 12.4375V3.0625C4.0625 2.64829 3.72671 2.3125 3.3125 2.3125H1.8125C1.39829 2.3125 1.0625 2.64829 1.0625 3.0625V12.4375C1.0625 12.8517 1.39829 13.1875 1.8125 13.1875H3.3125C3.72671 13.1875 4.0625 12.8517 4.0625 12.4375ZM4.0625 12.4375V1.5625C4.0625 1.14829 4.39829 0.8125 4.8125 0.8125H8.1875C8.60171 0.8125 8.9375 1.14829 8.9375 1.5625V12.4375C8.9375 12.8517 8.60171 13.1875 8.1875 13.1875H4.8125C4.39829 13.1875 4.0625 12.8517 4.0625 12.4375ZM4.0625 3.90625H8.9375M4.0625 10.0938H8.9375M12.845 13.2109L14.6561 12.7256C15.0562 12.6184 15.2936 12.2071 15.1864 11.807L12.9541 3.47593C12.8469 3.07583 12.4357 2.83839 12.0356 2.9456L10.2244 3.43089C9.82435 3.53809 9.58691 3.94935 9.69411 4.34944L11.9264 12.6806C12.0336 13.0807 12.4449 13.3181 12.845 13.2109Z" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="round" />
             </svg>
