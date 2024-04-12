@@ -2,46 +2,19 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Start-Furnace-Server is a command-line interface (CLI) tool designed to simplify the process of launching a Minecraft server. It automates the setup and initialization of the server environment, allowing you to run the installer and be ready to start playing in less than 60 seconds.
 
-## Getting Started
+## Features
 
-Get started by **creating a new site**.
+* **Customizable Configuration:** Furnace guides you through commonly changed configuration steps, such as:
+  - Setting a port
+  - Setting a MOTD (Message of the Day)
+  - Setting maximum players
+* **Support for Different Platforms:** Furnace supports commonly used server platforms like Purpur, Paper, and Vanilla.
+* **Ease of Use:** Furnace is designed to be user-friendly, even for those without a technical background, so you can set up your server yourself instead of relying on overpriced hosting providers.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-### What you'll need
-
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+## Requirements
+- Java: Furnace checks if Java is installed upon first start. Depending on the version of Minecraft you want to play, you might need a different version of Java. Check the console
+- Linux Server
