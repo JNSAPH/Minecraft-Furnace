@@ -3,7 +3,7 @@ name: Deploy Docuaurus Documentation
 on:
   push:
     branches:
-      - main
+      - production
   workflow_dispatch:
 
 
