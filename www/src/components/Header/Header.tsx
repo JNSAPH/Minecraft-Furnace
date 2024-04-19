@@ -18,7 +18,7 @@ const Header = () => {
                 autoPlay
                 loop
                 muted
-                src="/background.webm"
+                src="https://cdn.jnsaph.com/jnsaph/furnace_assets/background.webm"
             />
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-full flex flex-col space-y-4 justify-center items-center z-5">
                 <LogoText />
